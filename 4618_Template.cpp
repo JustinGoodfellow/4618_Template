@@ -22,6 +22,8 @@
 #include "Client.h"
 #include "Server.h"
 #include "CControl.h"
+#include "CBase4618.h"
+#include "CSketch.h"
 
 // Must include Windows.h after Winsock2.h, so Serial must be included after Client/Server
 #include "Serial.h" 
