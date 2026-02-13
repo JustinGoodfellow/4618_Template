@@ -18,29 +18,41 @@ CControl::~CControl()
 {
 }
 
+void watchdog_thread(CControl* control_ptr);
+
 void CControl::init_com(int comport)
 {
     if (comport > 0)
     {
         std::string portName = "COM" + std::to_string(comport);
         _com.open(portName, 115200);
+        connected = true;
     }
     if (comport < 0)
     {
         for(int port = 1; port <= 10; port++)
-        {
+{
             std::string portName = "COM" + std::to_string(port);
             if (_com.open(portName, 115200))
-            {
+    {
 //				std::cout << "\nConnected to " << portName << std::endl;
-                break;
+                        break;
+                    }
+                }
+                catch (...) {}
+            }
+            if (!is_connected)
+            {
+                std::this_thread::sleep_for(std::chrono::seconds(1));
             }
 		}
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
 bool CControl::get_data(int type, int channel, int& result)
 {
+    //_com.flush();
     char buffer[16] = {};
     int len = snprintf(buffer, sizeof(buffer), "G %d %d\n", type, channel);
     _com.write(buffer, len);
@@ -188,23 +200,27 @@ bool CControl::get_button(int channel)
     if (!get_data(DIGITAL, channel, raw_state))
         return false;
 
-    auto now = std::chrono::steady_clock::now();
+    while (1)
+    {
+        int button_state = 1;
+        get_data(DIGITAL, channel, button_state);
+        auto now = std::chrono::steady_clock::now();
     const auto debounce = std::chrono::milliseconds(DEBOUNCE_MS);
 
     if (_last_raw_state.count(channel) == 0)
-    {
+        {
         _last_raw_state[channel] = raw_state;
         _stable_state[channel] = raw_state;
         _last_change_time[channel] = now;
         return false;
-    }
+        }
 
     if (raw_state != _last_raw_state[channel])
-    {
+        {
         _last_raw_state[channel] = raw_state;
         _last_change_time[channel] = now;
-        return false;
-    }
+				return false;
+        }
 
     if (now - _last_change_time[channel] < debounce)
         return false;
