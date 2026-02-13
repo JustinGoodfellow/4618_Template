@@ -22,12 +22,12 @@ public:
 	CSketch(void);
 	~CSketch(void);
 private:
-	cv::Point _canvas; ///< The current position of the "pen" on the canvas
-	cv::Point _gui; ///< The position of the GUI elements on the canvas
-	cv::Point2f _input; ///< The current input values from the control board for x and y directions
-	//int _xcanvas, _ycanvas;
-	//int _xgui, _ygui;
-	//float _xinput, _yinput;
+	//cv::Point _canvas; ///< The current position of the "pen" on the canvas
+	//cv::Point _gui; ///< The position of the GUI elements on the canvas
+	//cv::Point2f _input; ///< The current input values from the control board for x and y directions
+	int _xcanvas, _ycanvas;
+	int _xgui, _ygui;
+	float _xinput, _yinput;
 	int _shake; ///< The current input value from the accelerometer for shake detection
 	int _reset; ///< Flag to indicate whether the canvas should be reset
 	int _colour_change; ///< Flag to indicate whether the colour should be changed
