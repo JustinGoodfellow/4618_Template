@@ -11,7 +11,7 @@ void CBase4618::gpioLoop()
 	while (_running)
 	{
 		this->gpio();
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 }
 
@@ -40,8 +40,9 @@ void CBase4618::run(void)
 	while (_running)
 	{
 		draw();
-		char key = (char)cv::waitKey(1);
+		char key = cv::pollKey();
 		if (key == 'q')
+
 			_running = false;
 	}
 	gpio_thread.join();

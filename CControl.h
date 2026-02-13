@@ -9,9 +9,9 @@
 #define GRN_LED_CHAN 38
 #define BLU_LED_CHAN 37
 #define RED_LED_CHAN 39
-#define ACC_X_CHAN 23
-#define ACC_Y_CHAN 24
-#define ACC_Z_CHAN 25
+#define ACC_X_CHAN 5
+#define ACC_Y_CHAN 6
+#define ACC_Z_CHAN 7
 #define SERVO_CHAN 0
 #define SERVO_MIN_ANGLE 1
 #define SERVO_MAX_ANGLE 180
@@ -33,6 +33,14 @@ enum type {
 class CControl {
 private:
 	Serial _com; ///< Serial port object for communication
+
+	std::atomic<bool> connected{ false };
+	std::mutex com_mutex;
+
+	std::map<int, int> _last_raw_state;
+	std::map<int, int> _stable_state;
+	std::map<int, std::chrono::steady_clock::time_point> _last_change_time;
+
 public:
 	CControl();
 	~CControl();

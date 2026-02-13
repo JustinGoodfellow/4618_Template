@@ -339,7 +339,7 @@ void lab2()
 void lab3()
 {
     CControl control;
-    control.init_com(3);
+    control.init_com();
     while (1)
     {
         char user_input;
@@ -364,18 +364,9 @@ void lab3()
                 float joy_x_perc = 0.0f;
                 float joy_y_perc = 0.0f;
 
-                if (!control.get_data(ANALOG, JOYX_CHAN, joy_x_raw))
-                {
-                    std::cerr << "\nANALOG TEST: failed to read JOYX";
-                }
-
+                control.get_data(ANALOG, JOYX_CHAN, joy_x_raw);
                 control.get_analog(JOYX_CHAN, joy_x_perc);
-
-                if (!control.get_data(ANALOG, JOYY_CHAN, joy_y_raw))
-                {
-                    std::cerr << "\nANALOG TEST: failed to read JOYY";
-                }
-
+                control.get_data(ANALOG, JOYY_CHAN, joy_y_raw);
                 control.get_analog(JOYY_CHAN, joy_y_perc);
 
                 printf("\nANALOG TEST: "
@@ -481,7 +472,7 @@ void lab3()
 ////////////////////////////////////////////////////////////////
 void lab4()
 {
-    CSketch sketch;
+    CSketch sketch(cv::Size(1280, 720), 3);
     sketch.run();
 }
 
@@ -490,6 +481,21 @@ void lab4()
 ////////////////////////////////////////////////////////////////
 void lab5()
 {
+    CControl control;
+	control.init_com(3);
+    while (1)
+    {
+        int x, y, z;
+		control.get_data(ANALOG, ACC_X_CHAN, x);
+		control.get_data(ANALOG, ACC_Y_CHAN, y);
+		control.get_data(ANALOG, ACC_Z_CHAN, z);
+        std::cout << "\nACC TEST: X=" << x << " Y=" << y << " Z=" << z;
+        if (kbhit())
+        {
+            _getch();
+            break;
+		}
+    }
 }
 
 ////////////////////////////////////////////////////////////////
