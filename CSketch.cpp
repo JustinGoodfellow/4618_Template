@@ -35,6 +35,9 @@ CSketch::CSketch(void) : CSketch(cv::Size(500, 500), 3)
 CSketch::~CSketch(void)
 {
 	cv::destroyWindow("Etch-a-Sketch");
+	control.set_data(DIGITAL, BLU_LED_CHAN, 0);
+	control.set_data(DIGITAL, GRN_LED_CHAN, 0);
+	control.set_data(DIGITAL, RED_LED_CHAN, 0);
 }
 
 void CSketch::gpio(void)
